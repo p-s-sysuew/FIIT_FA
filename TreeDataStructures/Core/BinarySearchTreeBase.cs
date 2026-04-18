@@ -94,7 +94,7 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
         OnNodeAdded(newNode);   // хук для балансировки в наследниках
     }
 
-    /// Удаляет элемент по ключу
+    // Удаляет элемент по ключу
     public virtual bool Remove(TKey key)
     {
         TNode? node = FindNode(key);

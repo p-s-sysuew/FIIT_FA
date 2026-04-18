@@ -16,18 +16,14 @@ public class BinarySearchTree<TKey, TValue>
 
 
     // Вызываемый сразу после успешной вставки нового узла.
-    // newNode - только что добавленный узел
     protected override void OnNodeAdded(BstNode<TKey, TValue> newNode)
     {
-        // Для обычного BST ничего делать не нужно
     }
 
-    /// Вызываемый после удаления узла.
-    /// parent - родитель удалённого узла
-    /// child - узел, который занял место удалённого
+    // Вызываемый после удаления узла.
     protected override void OnNodeRemoved(BstNode<TKey, TValue>? parent, BstNode<TKey, TValue>? child)
     {
-        // Для обычного BST ничего делать не нужно
+
     }
 }
 
