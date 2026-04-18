@@ -13,28 +13,29 @@ public class Treap<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, TreapNode<
     {
         if (root == null)
         {
-            return (null, null);
+            return (null, null); // Пустое дерево
         }
 
+        // Корень и его левое поддерево идут в левую часть
         if (Comparer.Compare(root.Key, key) <= 0)
         {
-            var (middleLeft, right) = Split(root.Right, key);
+            var (middleLeft, right) = Split(root.Right, key); // Рекурсивно режем правое поддерево
 
-            root.Right = middleLeft;
+            root.Right = middleLeft; // Присоединяем среднюю часть к корню
             middleLeft?.Parent = root;
 
             root.Parent = null;
-            return (root, right);
+            return (root, right); // Корень в левом дереве
         }
-        else
+        else // Корень идёт в правое дерево
         {
-            var (left, middleRight) = Split(root.Left, key);
+            var (left, middleRight) = Split(root.Left, key); // Рекурсивно режем левое поддерево
 
             root.Left = middleRight;
             middleRight?.Parent = root;
 
             root.Parent = null;
-            return (left, root);
+            return (left, root); // Корень в правом дереве
         }
     }
 
@@ -48,33 +49,28 @@ public class Treap<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, TreapNode<
         if (left == null)
         {
             right?.Parent = null;
-            return right;
+            return right; // Левое пусто — возвращаем правое
         }
 
         if (right == null)
         {
             left.Parent = null;
-            return left;
+            return left; // Правое пусто — возвращаем левое
         }
 
+        // У кого приоритет выше, тот становится корнем
         if (left.Priority > right.Priority)
         {
-            left.Right = Merge(left.Right, right);
-
+            left.Right = Merge(left.Right, right); // Рекурсивно сливаем правое поддерево левого
             left.Right?.Parent = left;
-
             left.Parent = null;
-
             return left;
         }
         else
         {
-            right.Left = Merge(left, right.Left);
-
+            right.Left = Merge(left, right.Left); // Рекурсивно сливаем левое поддерево правого
             right.Left?.Parent = right;
-
             right.Parent = null;
-
             return right;
         }
     }
@@ -84,15 +80,15 @@ public class Treap<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, TreapNode<
         var existing = FindNode(key);
         if (existing != null)
         {
-            existing.Value = value;
+            existing.Value = value; // Обновляем существующий ключ
             return;
         }
 
         var newNode = CreateNode(key, value);
 
-        var (left, right) = Split(Root, key);
+        var (left, right) = Split(Root, key); // Режем по ключу
 
-        Root = Merge(Merge(left, newNode), right);
+        Root = Merge(Merge(left, newNode), right); // Вставляем новый узел между left и right
 
         Root?.Parent = null;
 
@@ -104,24 +100,24 @@ public class Treap<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, TreapNode<
         var node = FindNode(key);
         if (node == null)
         {
-            return false;
+            return false; // Узел не найден
         }
 
-        var merged = Merge(node.Left, node.Right);
+        var merged = Merge(node.Left, node.Right); // Сливаем детей удаляемого узла
 
         if (node.Parent == null)
         {
-            Root = merged;
+            Root = merged; // Удаляем корень
             Root?.Parent = null;
         }
         else if (node.IsLeftChild)
         {
-            node.Parent.Left = merged;
+            node.Parent.Left = merged; // Присоединяем результат к левому родителю
             merged?.Parent = node.Parent;
         }
         else
         {
-            node.Parent.Right = merged;
+            node.Parent.Right = merged; // Присоединяем результат к правому родителю
             merged?.Parent = node.Parent;
         }
 
@@ -133,15 +129,17 @@ public class Treap<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, TreapNode<
     {
         return new TreapNode<TKey, TValue>(key, value);
     }
+    
     protected override void OnNodeAdded(TreapNode<TKey, TValue> newNode)
     {
+        
     }
 
     protected override void OnNodeRemoved(TreapNode<TKey, TValue>? parent, TreapNode<TKey, TValue>? child)
     {
+        // Можно переопределить для логирования
     }
-
 }
 
 // Запустить тесты только для этого типа v v v
-// dotnet test TreeDataStructures.Tests/ --filter TestCategory=Treap -r linux-x64 -v normal   
+// dotnet test TreeDataStructures.Tests/ --filter TestCategory=Treap -r linux-x64 -v normal
